@@ -6,9 +6,9 @@ public abstract class Pedido {
     private String tipoPedido;
 
     public Pedido(String idPedido, String direccionEntrega, String tipoPedido) {
-    this.idPedido = idPedido;
-    this.direccionEntrega = direccionEntrega;
-    this.tipoPedido = tipoPedido;
+        this.idPedido = idPedido;
+        this.direccionEntrega = direccionEntrega;
+        this.tipoPedido = tipoPedido;
 
     }
 
@@ -52,6 +52,6 @@ public abstract class Pedido {
         if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
             throw new IllegalArgumentException("Ingrese un nombre de repartidor válido.");
         }
-        return "El repartidor " +  nombreRepartidor + " fue asignado manualmente al pedido.";
+        return "El repartidor " + nombreRepartidor + " fue asignado manualmente al pedido.";
     }
 }

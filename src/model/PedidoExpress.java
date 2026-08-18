@@ -1,7 +1,7 @@
 package model;
 
 public class PedidoExpress extends Pedido {
-private Repartidor repartidor;
+    private Repartidor repartidor;
 
     public PedidoExpress(String idPedido, String direccionEntrega, String tipoPedido, Repartidor repartidor) {
         super(idPedido, direccionEntrega, tipoPedido);
@@ -13,7 +13,7 @@ private Repartidor repartidor;
     }
 
     public void setRepartidor(Repartidor repartidor) throws IllegalArgumentException {
-        if (repartidor == null ) {
+        if (repartidor == null) {
             throw new IllegalArgumentException("Repartidor inválido");
         }
         this.repartidor = repartidor;
@@ -21,11 +21,28 @@ private Repartidor repartidor;
 
     @Override
     public String asignarRepartidor() {
-        if (!repartidor.isDisponible()){
+        if (!repartidor.isDisponible()) {
             return "Repartidor ocupado";
         }
-        return "Se ha verificado disponibilidad del repartidor. Repartidor asignado.";
+        return "Se ha verificado disponibilidad del repartidor. \nRepartidor asignado.";
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "\nRepartidor de su pedido: " + repartidor.toString();
+    }
+
+    @Override
+    public String asignarRepartidor(String nombreRepartidor) throws IllegalArgumentException {
+        if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
+            throw new IllegalArgumentException("Ingrese un nombre de repartidor válido.");
+        }
+        if (!repartidor.isDisponible()) {
+            return "No se puede asignar a " + nombreRepartidor + ": el repartidor está ocupado.";
+        }
+
+        return "Repartidor cercano con disponibilidad inmediata encontrado. " +
+                "Pedido asignado a " + nombreRepartidor + ".";
+    }
 
 }

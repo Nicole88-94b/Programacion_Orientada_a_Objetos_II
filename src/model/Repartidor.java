@@ -29,9 +29,7 @@ public class Repartidor {
     }
 
     public void setTieneMochilaTermica(boolean tieneMochilaTermica) {
-         if (tieneMochilaTermica == true) {
              this.tieneMochilaTermica = tieneMochilaTermica;
-         }
     }
 
     public boolean isDisponible() {
@@ -39,20 +37,16 @@ public class Repartidor {
     }
 
     public void setDisponible(boolean disponible) {
-         if (disponible == true) {
              this.disponible = disponible;
-         }
     }
 
 
 
     @Override
     public String toString() {
-        String estadoMochila = tieneMochilaTermica ? "Tiene mochila" : "No tiene mochila";
         String estadoDisponibilidad = disponible ? "Está disponible el repartidor" : "El repartidor está ocupado";
 
-        return "Nombre del repartidor asignado: " + nombreRepartidor + ";" +
-                "\nMochila térmica: " + estadoMochila + ";" +
-                "\nDisponibilidad:" + estadoDisponibilidad + ".";
+        return nombreRepartidor +
+                "\nDisponibilidad: " + estadoDisponibilidad + ".";
     }
 }
