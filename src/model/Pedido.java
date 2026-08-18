@@ -47,4 +47,11 @@ public abstract class Pedido {
     public String asignarRepartidor() {
         return "Espere mientras se asigna un repartidor...";
     }
+
+    public String asignarRepartidor(String nombreRepartidor) throws IllegalArgumentException {
+        if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
+            throw new IllegalArgumentException("Ingrese un nombre de repartidor válido.");
+        }
+        return "El repartidor " +  nombreRepartidor + " fue asignado manualmente al pedido.";
+    }
 }

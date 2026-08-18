@@ -21,7 +21,10 @@ private Repartidor repartidor;
 
     @Override
     public String asignarRepartidor() {
-        return "Se ha encontrado un repartidor cercano. Repartidor asignado.";
+        if (!repartidor.isDisponible()){
+            return "Repartidor ocupado";
+        }
+        return "Se ha verificado disponibilidad del repartidor. Repartidor asignado.";
     }
 
 

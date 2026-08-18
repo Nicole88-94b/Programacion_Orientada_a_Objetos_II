@@ -3,15 +3,14 @@ package model;
 
 public class Repartidor {
     private String nombreRepartidor;
-    private String mochilaRepartidor;
-    private String disponibilidad;
+    private boolean tieneMochilaTermica;
+    private boolean disponible;
 
 
-     public Repartidor(String nombreRepartidor, String mochilaRepartidor, String disponibilidad) throws IllegalArgumentException {
+     public Repartidor(String nombreRepartidor,boolean tieneMochilaTermica,boolean disponible)  {
         setNombreRepartidor(nombreRepartidor);
-        setMochilaRepartidor(mochilaRepartidor);
-        setDisponibilidad(disponibilidad);
-
+        setTieneMochilaTermica(tieneMochilaTermica);
+        setDisponible(disponible);
     }
 
     public String getNombreRepartidor() {
@@ -25,33 +24,35 @@ public class Repartidor {
         this.nombreRepartidor = nombreRepartidor;
     }
 
-    public String getMochilaRepartidor() {
-        return mochilaRepartidor;
+    public boolean isTieneMochilaTermica() {
+        return tieneMochilaTermica;
     }
 
-    public void setMochilaRepartidor(String mochilaRepartidor) throws IllegalArgumentException {
-        if (mochilaRepartidor == null || mochilaRepartidor.isBlank()) {
-            throw new IllegalArgumentException("Debe asignar una mochila al repartidor.");
-        }
-        this.mochilaRepartidor = mochilaRepartidor;
+    public void setTieneMochilaTermica(boolean tieneMochilaTermica) {
+         if (tieneMochilaTermica == true) {
+             this.tieneMochilaTermica = tieneMochilaTermica;
+         }
     }
 
-    public String getDisponibilidad() {
-        return disponibilidad;
+    public boolean isDisponible() {
+        return disponible;
     }
 
-    public void setDisponibilidad(String disponibilidad) throws IllegalArgumentException {
-        if  (disponibilidad == null || disponibilidad.isBlank() || !disponibilidad.matches("DISPONIBLE|OCUPADO")) {
-            throw new IllegalArgumentException("Disponibilidad del repartidor inválida. Ingrese 'DISPONIBLE' u 'OCUPADO'.");
-        }
-        this.disponibilidad = disponibilidad;
+    public void setDisponible(boolean disponible) {
+         if (disponible == true) {
+             this.disponible = disponible;
+         }
     }
+
 
 
     @Override
     public String toString() {
+        String estadoMochila = tieneMochilaTermica ? "Tiene mochila" : "No tiene mochila";
+        String estadoDisponibilidad = disponible ? "Está disponible el repartidor" : "El repartidor está ocupado";
+
         return "Nombre del repartidor asignado: " + nombreRepartidor + ";" +
-                "estado mochila del repartidor" + mochilaRepartidor + ";" +
-                "disponibilidad:" + disponibilidad + ".";
+                "\nMochila térmica: " + estadoMochila + ";" +
+                "\nDisponibilidad:" + estadoDisponibilidad + ".";
     }
 }

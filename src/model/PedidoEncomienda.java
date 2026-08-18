@@ -32,7 +32,7 @@ private Repartidor repartidor;
 
     public void setPeso(double peso) throws IllegalArgumentException {
         if (peso <= 0 || peso > 50) {
-            throw new IllegalArgumentException("Peso inválido. Registre un peso mayor a 0 y menor de 50 kg.");
+            throw new IllegalArgumentException("Peso inválido. Registre un peso mayor a 0 y menor o igual a 50 kg.");
         }
         this.peso = peso;
     }

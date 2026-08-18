@@ -22,7 +22,11 @@ public class PedidoComida  extends Pedido {
 
     @Override
     public String asignarRepartidor() {
-    return "El repartidor tiene sus implementos. Repartidor asignado";
+        if (!repartidor.isTieneMochilaTermica()) {
+            return  "No es posible asignar un repartidor sin una mochila térmica.";
+        }
+    return "Mochila térmica verificada. Repartidor asignado.";
+
     }
 
     @Override
