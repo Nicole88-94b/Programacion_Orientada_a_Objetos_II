@@ -3,8 +3,8 @@ package model;
 public class PedidoExpress extends Pedido {
     private Repartidor repartidor;
 
-    public PedidoExpress(String idPedido, String direccionEntrega, String tipoPedido, Repartidor repartidor) {
-        super(idPedido, direccionEntrega, tipoPedido);
+    public PedidoExpress(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros, Repartidor repartidor) {
+        super(idPedido, direccionEntrega, tipoPedido, distanciaKilometros);
         setRepartidor(repartidor);
     }
 
@@ -28,9 +28,12 @@ public class PedidoExpress extends Pedido {
     }
 
     @Override
-    public String toString() {
-        return super.toString() + "\nRepartidor de su pedido: " + repartidor.toString();
+    public String mostrarResumen() {
+        return super.mostrarResumen() +
+                "\nRepartidor de su pedido: " + repartidor.toString() +
+                "\nTiempo de entrega estimado: " + calcularTiempoEntrega();
     }
+
 
     @Override
     public String asignarRepartidor(String nombreRepartidor) throws IllegalArgumentException {
@@ -43,6 +46,16 @@ public class PedidoExpress extends Pedido {
 
         return "Repartidor cercano con disponibilidad inmediata encontrado. " +
                 "Pedido asignado a " + nombreRepartidor + ".";
+    }
+
+    @Override
+    public int calcularTiempoEntrega() {
+        int tiempoBaseDelPedido = 10;
+        int tiempoEntrega = tiempoBaseDelPedido;
+        if (getDistanciaKilometros() >5) {
+            tiempoEntrega = tiempoBaseDelPedido + 5;
+        }
+        return tiempoEntrega;
     }
 
 }

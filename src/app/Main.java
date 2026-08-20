@@ -16,40 +16,34 @@ public class Main {
 
         Pedido pedido1 = new PedidoComida("PC-001",
                 "Avenida Los Lagos 120",
-                "Pedido de comida",
+                "Pedido de comida", 30,
                 repartidores.get(1));
 
         System.out.println("\n===================PEDIDO DE COMIDA=================");
         System.out.println(pedido1.asignarRepartidor());
-        System.out.println(pedido1);
+        System.out.println(pedido1.mostrarResumen());
         System.out.println("=========================================================");
 
         Pedido pedido2 = new PedidoEncomienda("PE-001",
                 "Calle Vicente Pérez Rosales 450",
-                "Pedido de encomienda",
+                "Pedido de encomienda", 10,
                 "ACEPTADA",
                 12.5,
                 repartidores.get(0));
 
         System.out.println("\n===================PEDIDO DE ENCOMIENDA===================");
         System.out.println(pedido2.asignarRepartidor());
-        System.out.println(pedido2);
+        System.out.println(pedido2.mostrarResumen());
         System.out.println("=========================================================");
 
         Pedido pedido3 = new PedidoExpress("PX-001",
                 "Pasaje Puerto Varas 85",
-                "Pedido express",
+                "Pedido express", 6,
                 repartidores.get(2));
 
         System.out.println("\n===================PEDIDO EXPRESS===================");
         System.out.println(pedido3.asignarRepartidor());
-        System.out.println(pedido3);
-        System.out.println("=========================================================");
-
-        System.out.println("\n===================ASIGNACIÓN MANUAL DE REPARTIDOR===================");
-        System.out.println(pedido1.asignarRepartidor("Camilo"));
-        System.out.println(pedido2.asignarRepartidor("Valentina"));
-        System.out.println(pedido3.asignarRepartidor("Tomás"));
+        System.out.println(pedido3.mostrarResumen());
         System.out.println("=========================================================");
 
 

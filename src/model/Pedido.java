@@ -4,11 +4,13 @@ public abstract class Pedido {
     private String idPedido;
     private String direccionEntrega;
     private String tipoPedido;
+    private int distanciaKilometros;
 
-    public Pedido(String idPedido, String direccionEntrega, String tipoPedido) {
+    public Pedido(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
         this.tipoPedido = tipoPedido;
+        setDistanciaKilometros(distanciaKilometros);
 
     }
 
@@ -36,6 +38,24 @@ public abstract class Pedido {
         this.tipoPedido = tipoPedido;
     }
 
+    public int getDistanciaKilometros() {
+        return distanciaKilometros;
+    }
+
+    public void setDistanciaKilometros(int distanciaKilometros) {
+        try {
+            if (distanciaKilometros <= 0 ) {
+            }
+        } catch ( Exception e ) {
+            System.out.println("Los kilómetros ingresados deben ser superior a 0." + e.getMessage());
+        }
+        this.distanciaKilometros = distanciaKilometros;
+    }
+
+    public String mostrarResumen(){
+        return toString();
+    }
+
     public String toString() {
         return "Pedido inicializado: " +
                 "\nID del pedido: " + idPedido +
@@ -54,4 +74,6 @@ public abstract class Pedido {
         }
         return "El repartidor " + nombreRepartidor + " fue asignado manualmente al pedido.";
     }
+
+    public abstract int calcularTiempoEntrega();
 }

@@ -6,9 +6,9 @@ public class PedidoEncomienda extends Pedido {
     private double peso;
     private Repartidor repartidor;
 
-    public PedidoEncomienda(String idPedido, String direccionEntrega, String tipoPedido, String estadoEmbalaje,
+    public PedidoEncomienda(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKikometros, String estadoEmbalaje,
                             double peso, Repartidor repartidor) {
-        super(idPedido, direccionEntrega, tipoPedido);
+        super(idPedido, direccionEntrega, tipoPedido, distanciaKikometros);
         setEstadoEmbalaje(estadoEmbalaje);
         setPeso(peso);
         setRepartidor(repartidor);
@@ -54,12 +54,14 @@ public class PedidoEncomienda extends Pedido {
     }
 
     @Override
-    public String toString() {
-        return super.toString() +
+    public String mostrarResumen(){
+        return super.mostrarResumen() +
                 "\nEstado del embalaje: " + getEstadoEmbalaje() +
                 "\nPeso de la encomienda: " + getPeso() + " kg"
-                + "\nRepartidor de su pedido: " + repartidor.getNombreRepartidor();
+                + "\nRepartidor de su pedido: " + repartidor.getNombreRepartidor()
+                + "\nTiempo de entrega estimado: " + calcularTiempoEntrega();
     }
+
 
     @Override
     public String asignarRepartidor(String nombreRepartidor) {
@@ -77,6 +79,13 @@ public class PedidoEncomienda extends Pedido {
 
         return "Peso y embalaje verificados. Pedido asignado a " +
                 nombreRepartidor + ".";
+    }
+
+    @Override
+    public int calcularTiempoEntrega() {
+        int tiempoBaseDelPedido = 20;
+        int tiempoEntrega = (int) (tiempoBaseDelPedido + (getDistanciaKilometros() * 1.5));
+        return tiempoEntrega;
     }
 
 }
