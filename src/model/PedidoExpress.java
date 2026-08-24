@@ -30,8 +30,7 @@ public class PedidoExpress extends Pedido {
     @Override
     public String mostrarResumen() {
         return super.mostrarResumen() +
-                "\nRepartidor de su pedido: " + repartidor.toString() +
-                "\nTiempo de entrega estimado: " + calcularTiempoEntrega();
+                "\nRepartidor de su pedido: " + repartidor.toString();
     }
 
 

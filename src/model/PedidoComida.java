@@ -34,8 +34,7 @@ public class PedidoComida extends Pedido {
         String estadoMochila = repartidor.isTieneMochilaTermica() ? "Tiene mochila." : "No tiene mochila.";
         return super.mostrarResumen() +
                 "\nRepartidor de su pedido: " + repartidor +
-                "\nMochila térmica: " + estadoMochila +
-                "\nTiempo de entrega estimado: " + calcularTiempoEntrega();
+                "\nMochila térmica: " + estadoMochila;
     }
 
 

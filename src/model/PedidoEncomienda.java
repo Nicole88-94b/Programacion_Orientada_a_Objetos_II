@@ -6,9 +6,9 @@ public class PedidoEncomienda extends Pedido {
     private double peso;
     private Repartidor repartidor;
 
-    public PedidoEncomienda(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKikometros, String estadoEmbalaje,
+    public PedidoEncomienda(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros, String estadoEmbalaje,
                             double peso, Repartidor repartidor) {
-        super(idPedido, direccionEntrega, tipoPedido, distanciaKikometros);
+        super(idPedido, direccionEntrega, tipoPedido, distanciaKilometros);
         setEstadoEmbalaje(estadoEmbalaje);
         setPeso(peso);
         setRepartidor(repartidor);
@@ -58,8 +58,7 @@ public class PedidoEncomienda extends Pedido {
         return super.mostrarResumen() +
                 "\nEstado del embalaje: " + getEstadoEmbalaje() +
                 "\nPeso de la encomienda: " + getPeso() + " kg"
-                + "\nRepartidor de su pedido: " + repartidor.getNombreRepartidor()
-                + "\nTiempo de entrega estimado: " + calcularTiempoEntrega();
+                + "\nRepartidor de su pedido: " + repartidor.getNombreRepartidor();
     }
 
 
@@ -74,7 +73,7 @@ public class PedidoEncomienda extends Pedido {
         }
 
         if (peso <= 0 || peso > 50) {
-            return "No se puede asignar el pedido: peso inválido.";
+            return "No se puede asignar el pedido: peso bajo 0 o sobre 50 kg.";
         }
 
         return "Peso y embalaje verificados. Pedido asignado a " +
@@ -84,7 +83,7 @@ public class PedidoEncomienda extends Pedido {
     @Override
     public int calcularTiempoEntrega() {
         int tiempoBaseDelPedido = 20;
-        int tiempoEntrega = (int) (tiempoBaseDelPedido + (getDistanciaKilometros() * 1.5));
+        int tiempoEntrega = (int) Math.round(tiempoBaseDelPedido + (getDistanciaKilometros() * 1.5));
         return tiempoEntrega;
     }
 

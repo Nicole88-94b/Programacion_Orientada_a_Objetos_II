@@ -42,25 +42,26 @@ public abstract class Pedido {
         return distanciaKilometros;
     }
 
-    public void setDistanciaKilometros(int distanciaKilometros) {
-        try {
-            if (distanciaKilometros <= 0 ) {
-            }
-        } catch ( Exception e ) {
-            System.out.println("Los kilómetros ingresados deben ser superior a 0." + e.getMessage());
+    public void setDistanciaKilometros(int distanciaKilometros) throws IllegalArgumentException {
+
+        if (distanciaKilometros <= 0) {
+            throw new IllegalArgumentException("La distancia debe ser superior a 0.");
         }
         this.distanciaKilometros = distanciaKilometros;
     }
 
-    public String mostrarResumen(){
+    public String mostrarResumen() {
         return toString();
     }
 
+    @Override
     public String toString() {
-        return "Pedido inicializado: " +
+        return "\nPedido inicializado... " +
+                "\n\n=======Resumen de su pedido=======" +
                 "\nID del pedido: " + idPedido +
                 "\nDirección de la Entrega: " + direccionEntrega +
-                "\nTipo de Pedido: " + tipoPedido;
+                "\nTipo de Pedido: " + tipoPedido +
+                "\nDistancia: " + distanciaKilometros + " km";
 
     }
 
