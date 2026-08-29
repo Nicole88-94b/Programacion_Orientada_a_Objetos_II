@@ -1,6 +1,8 @@
 package model;
 
-public class PedidoExpress extends Pedido {
+import interfaces.Cancelable;
+
+public class PedidoExpress extends Pedido implements Cancelable {
     private Repartidor repartidor;
 
     public PedidoExpress(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros, Repartidor repartidor) {
@@ -28,15 +30,8 @@ public class PedidoExpress extends Pedido {
     }
 
     @Override
-    public String mostrarResumen() {
-        return super.mostrarResumen() +
-                "\nRepartidor de su pedido: " + repartidor.toString();
-    }
-
-
-    @Override
     public String asignarRepartidor(String nombreRepartidor) throws IllegalArgumentException {
-        if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
+        if (nombreRepartidor == null || nombreRepartidor.trim().isEmpty()) {
             throw new IllegalArgumentException("Ingrese un nombre de repartidor válido.");
         }
         if (!repartidor.isDisponible()) {
@@ -57,4 +52,18 @@ public class PedidoExpress extends Pedido {
         return tiempoEntrega;
     }
 
+    @Override
+    public String mostrarResumen() {
+        return super.mostrarResumen();
+    }
+
+
+    @Override
+    public boolean cancelar() {
+        boolean cancelado = repartidor.isDisponible();;
+        if (!cancelado) {
+            return false;
+        }
+        return true;
+    }
 }

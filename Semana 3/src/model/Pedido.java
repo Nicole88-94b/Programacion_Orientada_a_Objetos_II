@@ -50,14 +50,11 @@ public abstract class Pedido {
         this.distanciaKilometros = distanciaKilometros;
     }
 
-    public String mostrarResumen() {
-        return toString();
-    }
 
     @Override
     public String toString() {
-        return "\nPedido inicializado... " +
-                "\n\n=======Resumen de su pedido=======" +
+        return "\nPedido inicializado exitosamente: " +
+                "\n----------------Resumen de su pedido----------------" +
                 "\nID del pedido: " + idPedido +
                 "\nDirección de la Entrega: " + direccionEntrega +
                 "\nTipo de Pedido: " + tipoPedido +
@@ -69,12 +66,12 @@ public abstract class Pedido {
         return "Espere mientras se asigna un repartidor...";
     }
 
-    public String asignarRepartidor(String nombreRepartidor) throws IllegalArgumentException {
-        if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
-            throw new IllegalArgumentException("Ingrese un nombre de repartidor válido.");
-        }
-        return "El repartidor " + nombreRepartidor + " fue asignado manualmente al pedido.";
-    }
+    public abstract String asignarRepartidor(String nombreRepartidor);
 
     public abstract int calcularTiempoEntrega();
+
+    public String mostrarResumen() {
+        return toString();
+    }
+
 }

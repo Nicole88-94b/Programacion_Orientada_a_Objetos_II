@@ -1,7 +1,11 @@
 package model;
 
 
-public class PedidoEncomienda extends Pedido {
+import interfaces.Cancelable;
+
+
+public class PedidoEncomienda extends Pedido implements Cancelable {
+
     private String estadoEmbalaje;
     private double peso;
     private Repartidor repartidor;
@@ -20,7 +24,7 @@ public class PedidoEncomienda extends Pedido {
     }
 
     public void setEstadoEmbalaje(String estadoEmbalaje) throws IllegalArgumentException {
-        if (estadoEmbalaje == null || estadoEmbalaje.isBlank() || !estadoEmbalaje.matches("ACEPTADA|RECHAZADA")) {
+        if (estadoEmbalaje == null || estadoEmbalaje.trim().isEmpty() || !estadoEmbalaje.matches("ACEPTADA|RECHAZADA")) {
             throw new IllegalArgumentException("Estado del embalaje inválido. Ingrese 'ACEPTADA' o 'RECHAZADA'.");
         }
         this.estadoEmbalaje = estadoEmbalaje;
@@ -50,41 +54,53 @@ public class PedidoEncomienda extends Pedido {
 
     @Override
     public String asignarRepartidor() {
-        return "El repartidor tiene la capacidad de transporte. \nRepartidor asignado.";
+        if (estadoEmbalaje.equals("RECHAZADA")) {
+            return "Encomienda RECHAZADA. No es posible asignar un repartidor.";
+        }
+        return "El repartidor tiene la capacidad de transporte. \nPedido asignado a: " + repartidor.getNombreRepartidor();
     }
-
-    @Override
-    public String mostrarResumen(){
-        return super.mostrarResumen() +
-                "\nEstado del embalaje: " + getEstadoEmbalaje() +
-                "\nPeso de la encomienda: " + getPeso() + " kg"
-                + "\nRepartidor de su pedido: " + repartidor.getNombreRepartidor();
-    }
-
 
     @Override
     public String asignarRepartidor(String nombreRepartidor) {
-        if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
+        if (nombreRepartidor == null || nombreRepartidor.trim().isEmpty()) {
             throw new IllegalArgumentException("Ingrese un nombre válido.");
         }
 
         if (!"ACEPTADA".equals(estadoEmbalaje)) {
             return "No se puede asignar el pedido: embalaje rechazado.";
         }
-
+/*
         if (peso <= 0 || peso > 50) {
             return "No se puede asignar el pedido: peso bajo 0 o sobre 50 kg.";
         }
 
-        return "Peso y embalaje verificados. Pedido asignado a " +
-                nombreRepartidor + ".";
+ */
+            return "Peso y embalaje verificados. Pedido asignado a " + nombreRepartidor + ".";
+
     }
+
+    @Override
+    public boolean cancelar() {
+        String estadoEmbalajeValidado = getEstadoEmbalaje();
+        if (estadoEmbalajeValidado.equals("RECHAZADA") || !getRepartidor().isDisponible()) {
+            return false;
+        }
+        return true;
+    }
+
 
     @Override
     public int calcularTiempoEntrega() {
         int tiempoBaseDelPedido = 20;
         int tiempoEntrega = (int) Math.round(tiempoBaseDelPedido + (getDistanciaKilometros() * 1.5));
         return tiempoEntrega;
+    }
+
+    @Override
+    public String mostrarResumen(){
+        return super.mostrarResumen() +
+                "\nEstado del embalaje: " + getEstadoEmbalaje() +
+                "\nPeso de la encomienda: " + getPeso() + " kg";
     }
 
 }

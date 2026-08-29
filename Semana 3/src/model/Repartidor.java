@@ -1,6 +1,9 @@
 package model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Repartidor {
     private String nombreRepartidor;
     private boolean tieneMochilaTermica;
@@ -17,11 +20,11 @@ public class Repartidor {
         return nombreRepartidor;
     }
 
-    public void setNombreRepartidor(String nombreRepartidor) throws IllegalArgumentException {
-        if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
+    public String setNombreRepartidor(String nombreRepartidor) throws IllegalArgumentException {
+        if (nombreRepartidor == null || nombreRepartidor.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del repartidor es obligatorio.");
         }
-        this.nombreRepartidor = nombreRepartidor;
+            return this.nombreRepartidor = nombreRepartidor;
     }
 
     public boolean isTieneMochilaTermica() {
@@ -40,13 +43,18 @@ public class Repartidor {
              this.disponible = disponible;
     }
 
-
-
     @Override
     public String toString() {
         String estadoDisponibilidad = disponible ? "Está disponible el repartidor" : "El repartidor está ocupado";
+        String estadoMochila = tieneMochilaTermica ? "Correcto." : "Incorrecto: no tiene mochila térmica.";
 
-        return nombreRepartidor +
-                "\nDisponibilidad: " + estadoDisponibilidad + ".";
+        return "Nombre del repartidor: " + nombreRepartidor +
+                "\nDisponibilidad: " + estadoDisponibilidad + "."
+                + "\nPosee mochila térmica: " + estadoMochila;
     }
+
+    public List<Repartidor> registrarRepartidor() {
+         return  new ArrayList<Repartidor>();
+    }
+
 }

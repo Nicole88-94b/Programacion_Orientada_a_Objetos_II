@@ -1,7 +1,9 @@
 package model;
 
 
-public class PedidoComida extends Pedido {
+import interfaces.Cancelable;
+
+public class PedidoComida extends Pedido implements Cancelable {
     private Repartidor repartidor;
 
     public PedidoComida(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros, Repartidor repartidor) {
@@ -25,25 +27,17 @@ public class PedidoComida extends Pedido {
         if (!repartidor.isTieneMochilaTermica()) {
             return "No es posible asignar un repartidor sin una mochila térmica.";
         }
-        return "Mochila térmica verificada. \nRepartidor asignado.";
+        return "Repartidor " + repartidor.getNombreRepartidor() + " encontrado.";
 
     }
-
-    @Override
-    public String mostrarResumen() {
-        String estadoMochila = repartidor.isTieneMochilaTermica() ? "Tiene mochila." : "No tiene mochila.";
-        return super.mostrarResumen() +
-                "\nRepartidor de su pedido: " + repartidor +
-                "\nMochila térmica: " + estadoMochila;
-    }
-
 
     @Override
     public String asignarRepartidor(String nombreRepartidor) throws IllegalArgumentException {
-        if (nombreRepartidor == null || nombreRepartidor.isBlank()) {
+        if (nombreRepartidor == null || nombreRepartidor.trim().isEmpty()) {
             throw new IllegalArgumentException("Ingrese un nombre de repartidor válido.");
         }
-        if (!repartidor.isTieneMochilaTermica()) {
+        boolean verificarMochila = repartidor.isTieneMochilaTermica();
+        if (!verificarMochila) {
             return "No se puede asignar a " + nombreRepartidor + ": no tiene mochila térmica.";
         }
         return "Mochila térmica verificada. Pedido asignado a " +
@@ -57,4 +51,21 @@ public class PedidoComida extends Pedido {
         return tiempoEntrega;
     }
 
+    @Override
+    public String mostrarResumen() {
+        String estadoMochila = repartidor.isTieneMochilaTermica() ? "Correcto." : "Incorrecto: no tiene mochila térmica.";
+        return super.mostrarResumen() +
+                "\nEstado de la mochila térmica: " + estadoMochila;
+    }
+
+
+    @Override
+    public boolean cancelar() {
+        boolean cancelado = repartidor.isTieneMochilaTermica();
+        boolean cancelado2 = repartidor.isDisponible();
+        if (!cancelado || !cancelado2) {
+            return false;
+        }
+        return true;
+    }
 }
