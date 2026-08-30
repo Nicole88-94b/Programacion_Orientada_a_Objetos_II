@@ -1,86 +1,113 @@
 package app;
 
 
+import gestor.ControladorDeEnvios;
 import model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    static void main(String[] args) {
+    public static void main(String[] args) {
 
-        Repartidor repartidor = new Repartidor("Defecto", true, true);
-        List<Repartidor> repartidores = repartidor.registrarRepartidor();
+        //--------------------------------------REPARTIDORES DISPONIBLES--------------------------------
+        ControladorDeEnvios controles = new ControladorDeEnvios();
+        List<Repartidor> repartidores = new ArrayList<>();
         repartidores.add(new Repartidor("Valentina Contreras", true, false));
         repartidores.add(new Repartidor("Camilo Henríquez", true, true));
         repartidores.add(new Repartidor("Tomás Liencura", false, false));
 
-        for (Repartidor r : repartidores) {
-            r.registrarRepartidor();
-            System.out.println(r);
-        }
 
 
+//------------------------------------PEDIDOS SOLICITADOS-------------------------------------------
         PedidoComida pedido1 = new PedidoComida("PC-001",
                 "Avenida Los Lagos 120",
                 "Pedido de comida", 30,
-                repartidores.get(0));
-
-        System.out.println("\n===================PEDIDO DE COMIDA=================");
-        System.out.println("Buscando un repartidor con mochila térmica...");
-        System.out.println(pedido1.asignarRepartidor(repartidores.get(2).setNombreRepartidor("Camila Parada")));
-        System.out.println("Verificando disponibilidad...");
-        boolean validacionPrimaria = pedido1.cancelar();
-        if (validacionPrimaria) {
-            String validacionSecundaria = pedido1.cancelar() ? "Repartidor disponible" :
-                    "No se ha verificado la disponibilidad del repartidor.";
-
-            System.out.println(validacionSecundaria);
-            System.out.println(pedido1.mostrarResumen());
-            System.out.println("Tiempo de entrega estimado: " + pedido1.calcularTiempoEntrega() + " minutos.");
-            System.out.println("=========================================================");
-        } else {
-            System.out.println("No ha sido posible asignarle el repartidor. Lo sentimos, pedido cancelado.");
-        }
+                repartidores.get(1));
 
         PedidoEncomienda pedido2 = new PedidoEncomienda("PE-001",
                 "Calle Vicente Pérez Rosales 450",
-                "Pedido de encomienda", 12,
-                "ACEPTADA",
-                30,
-                repartidores.get(1));
-
-        System.out.println("\n===================PEDIDO DE ENCOMIENDA===================");
-        System.out.println("Buscando un repartidor...");
-        System.out.println(pedido2.asignarRepartidor(repartidores.get(2).setNombreRepartidor("Fernando León")));
-        System.out.println("Verificando disponibilidad...");
-        boolean validado2 = pedido2.cancelar();
-        if (validado2) {
-            System.out.println("Repartidor disponible");
-            System.out.println(pedido2.mostrarResumen());
-            System.out.println("Tiempo de entrega estimado: " + pedido2.calcularTiempoEntrega() + " minutos.");
-            System.out.println("=========================================================");
-        } else {
-            System.out.println("No ha sido posible asignarle el repartidor. Lo sentimos, pedido cancelado.");
-        }
-
+                "Pedido de encomienda", 12, "ACEPTADA",
+                30, repartidores.get(1));
 
         PedidoExpress pedido3 = new PedidoExpress("PX-001",
                 "Pasaje Puerto Varas 85",
                 "Pedido express", 6,
                 repartidores.get(1));
 
-        System.out.println("\n===================PEDIDO EXPRESS===================");
-        System.out.println("Buscando un repartidor...");
+
+        //----------------------------------------PEDIDOS DE COMIDA-----------------------------------------
+        System.out.println("\n===================PEDIDO COMIDA=================");
+        System.out.println("Buscando un repartidor con mochila térmica...");
+        System.out.println(pedido1.asignarRepartidor());
+        System.out.println("Código de su pedido: " + pedido1.getIdPedido());
         System.out.println("Verificando disponibilidad...");
-        boolean validado3 = pedido3.cancelar();
-        if (validado3) {
-            System.out.println(pedido3.asignarRepartidor());
+        controles.registrarPedido(pedido1);
+        boolean reservado1 = controles.reservarPedido(pedido1);
+        if (reservado1) {
+            System.out.println("Su pedido: " + pedido1.getIdPedido() + " ha sido reservado correctamente.");
+            controles.despacharPedido(pedido2);
+            System.out.println("Despachando pedido " + pedido1.getIdPedido() + "...");
+            System.out.println(pedido1.mostrarResumen());
+            System.out.println("Tiempo de entrega estimado: " + pedido1.calcularTiempoEntrega() + " minutos.");
+            System.out.println("=========================================================");
+        } else {
+        controles.cancelarPedido(pedido1);
+            System.out.println("Lo sentimos, no fue posible reservar el pedido porque no cumple los requisitos de envío.");
+        }
+
+
+        //---------------------------------------------ENCOMIENDAS-----------------------------------------------
+        System.out.println("\n===================PEDIDO ENCOMIENDA===================");
+        System.out.println("Buscando un repartidor disponible...");
+        System.out.println(pedido2.asignarRepartidor());
+        controles.registrarPedido(pedido2);
+        System.out.println("Código de su pedido: " + pedido2.getIdPedido());
+        boolean reservado2 = controles.reservarPedido(pedido2);
+        if (reservado2) {
+            System.out.println("Su pedido: " + pedido2.getIdPedido() + " ha sido reservado correctamente.");
+            controles.despacharPedido(pedido2);
+            System.out.println("Despachando pedido " + pedido2.getIdPedido() + "...");
+            System.out.println(pedido2.mostrarResumen());
+            System.out.println("Tiempo de entrega estimado: " + pedido2.calcularTiempoEntrega() + " minutos.");
+            System.out.println("=========================================================");
+        }
+        else {
+            controles.cancelarPedido(pedido2);
+            System.out.println( "Lo sentimos, no fue posible reservar el pedido porque no cumple los requisitos de envío.");
+
+        }
+
+
+        //----------------------- PEDIDOS EXPRESS ------------------------------
+        System.out.println("\n===================PEDIDO EXPRESS===================");
+        System.out.println("Buscando un repartidor disponible...");
+        System.out.println(pedido3.asignarRepartidor());
+        controles.registrarPedido(pedido3);
+        System.out.println("Código de su pedido: " + pedido3.getIdPedido());
+        boolean reservado3 = controles.reservarPedido(pedido3);
+        if (reservado3) {
+            System.out.println("Su pedido: " + pedido3.getIdPedido() + " ha sido reservado correctamente.");
+            controles.despacharPedido(pedido3);
+            System.out.println("Despachando pedido " + pedido3.getIdPedido() + "...");
             System.out.println(pedido3.mostrarResumen());
             System.out.println("Tiempo de entrega estimado: " + pedido3.calcularTiempoEntrega() + " minutos.");
             System.out.println("=========================================================");
         } else {
-            System.out.println("No ha sido posible asignarle el repartidor. Lo sentimos, pedido cancelado.");
+            controles.cancelarPedido(pedido3);
+            System.out.println( "Lo sentimos, no fue posible reservar el pedido porque no cumple los requisitos de envío.");
         }
+
+        System.out.println("\nHistorial de operaciones:");
+
+        for (String evento : controles.verHistorial()) {
+            System.out.println(evento);
+        }
+
+        controles.mostrarPedidosReservados();
+        controles.mostrarPedidosDespachados();
+        controles.mostrarPedidosCancelados();
+
 
 
     }

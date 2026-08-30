@@ -53,8 +53,4 @@ public class Repartidor {
                 + "\nPosee mochila térmica: " + estadoMochila;
     }
 
-    public List<Repartidor> registrarRepartidor() {
-         return  new ArrayList<Repartidor>();
-    }
-
 }

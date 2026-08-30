@@ -5,12 +5,19 @@ public abstract class Pedido {
     private String direccionEntrega;
     private String tipoPedido;
     private int distanciaKilometros;
+    private boolean despachado;
+    private boolean reservado;
+    private boolean cancelado;
 
     public Pedido(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
         this.tipoPedido = tipoPedido;
         setDistanciaKilometros(distanciaKilometros);
+        //Estado inicial por defecto del pedido
+        this.despachado = false;
+        this.reservado = false;
+        this.cancelado = false;
 
     }
 
@@ -50,6 +57,30 @@ public abstract class Pedido {
         this.distanciaKilometros = distanciaKilometros;
     }
 
+    public boolean isDespachado() {
+        return despachado;
+    }
+
+    protected void setDespachado() {
+        despachado = true;
+    }
+
+    public boolean isReservado() {
+        return reservado;
+    }
+
+    protected void setReservado() {
+        reservado = true;
+    }
+
+    public boolean isCancelado() {
+        return cancelado;
+    }
+
+    protected void setCancelado() {
+        cancelado = true;
+    }
+
 
     @Override
     public String toString() {
@@ -74,4 +105,7 @@ public abstract class Pedido {
         return toString();
     }
 
+    public abstract boolean cumpleRequisitos();
+
+    public abstract boolean reservar();
 }

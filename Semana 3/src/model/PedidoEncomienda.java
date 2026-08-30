@@ -2,9 +2,10 @@ package model;
 
 
 import interfaces.Cancelable;
+import interfaces.Despachable;
 
 
-public class PedidoEncomienda extends Pedido implements Cancelable {
+public class PedidoEncomienda extends Pedido implements Despachable, Cancelable {
 
     private String estadoEmbalaje;
     private double peso;
@@ -55,7 +56,7 @@ public class PedidoEncomienda extends Pedido implements Cancelable {
     @Override
     public String asignarRepartidor() {
         if (estadoEmbalaje.equals("RECHAZADA")) {
-            return "Encomienda RECHAZADA. No es posible asignar un repartidor.";
+            return "Su encomienda ha sido rechazada.";
         }
         return "El repartidor tiene la capacidad de transporte. \nPedido asignado a: " + repartidor.getNombreRepartidor();
     }
@@ -69,24 +70,10 @@ public class PedidoEncomienda extends Pedido implements Cancelable {
         if (!"ACEPTADA".equals(estadoEmbalaje)) {
             return "No se puede asignar el pedido: embalaje rechazado.";
         }
-/*
-        if (peso <= 0 || peso > 50) {
-            return "No se puede asignar el pedido: peso bajo 0 o sobre 50 kg.";
-        }
-
- */
             return "Peso y embalaje verificados. Pedido asignado a " + nombreRepartidor + ".";
 
     }
 
-    @Override
-    public boolean cancelar() {
-        String estadoEmbalajeValidado = getEstadoEmbalaje();
-        if (estadoEmbalajeValidado.equals("RECHAZADA") || !getRepartidor().isDisponible()) {
-            return false;
-        }
-        return true;
-    }
 
 
     @Override
@@ -101,6 +88,41 @@ public class PedidoEncomienda extends Pedido implements Cancelable {
         return super.mostrarResumen() +
                 "\nEstado del embalaje: " + getEstadoEmbalaje() +
                 "\nPeso de la encomienda: " + getPeso() + " kg";
+    }
+
+    @Override
+    public boolean cumpleRequisitos() {
+        return "ACEPTADA".equals(estadoEmbalaje) && repartidor.isDisponible();
+    }
+
+    @Override
+    public boolean reservar() {
+        if (!cumpleRequisitos()) {
+            return false;
+        }
+        if (isReservado() || isDespachado() || isCancelado()) {
+            return false;
+        }
+        setReservado();
+        return true;
+    }
+
+    @Override
+    public boolean despachar() {
+        if (!isReservado() || isDespachado() || isCancelado()) {
+            return false;
+        }
+
+        setDespachado();
+        return true;
+    }
+    @Override
+    public boolean cancelar() {
+        if (isDespachado() || isCancelado()) {
+            return false;
+        }
+        setCancelado();
+        return true;
     }
 
 }

@@ -1,11 +1,13 @@
 package model;
 
 import interfaces.Cancelable;
+import interfaces.Despachable;
 
-public class PedidoExpress extends Pedido implements Cancelable {
+public class PedidoExpress extends Pedido implements Cancelable, Despachable {
     private Repartidor repartidor;
 
-    public PedidoExpress(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros, Repartidor repartidor) {
+    public PedidoExpress(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros,
+                         Repartidor repartidor) {
         super(idPedido, direccionEntrega, tipoPedido, distanciaKilometros);
         setRepartidor(repartidor);
     }
@@ -24,7 +26,7 @@ public class PedidoExpress extends Pedido implements Cancelable {
     @Override
     public String asignarRepartidor() {
         if (!repartidor.isDisponible()) {
-            return "Repartidor ocupado";
+            return "Repartidor ocupado.";
         }
         return "Se ha verificado disponibilidad del repartidor. \nRepartidor asignado.";
     }
@@ -57,13 +59,41 @@ public class PedidoExpress extends Pedido implements Cancelable {
         return super.mostrarResumen();
     }
 
+    @Override
+    public boolean cumpleRequisitos() {
+        return repartidor.isDisponible();
+    }
+
+    @Override
+    public boolean reservar() {
+        if (!cumpleRequisitos()) {
+            return false;
+        }
+        if (isReservado() || isDespachado() || isCancelado()) {
+            return false;
+        }
+        setReservado();
+        return true;
+    }
+
+    @Override
+    public boolean despachar() {
+        if (!isReservado() || isDespachado() || isCancelado()) {
+            return false;
+        }
+
+        setDespachado();
+        return true;
+    }
 
     @Override
     public boolean cancelar() {
-        boolean cancelado = repartidor.isDisponible();;
-        if (!cancelado) {
+        if (isDespachado() || isCancelado()) {
             return false;
         }
+        setCancelado();
         return true;
     }
+
+
 }

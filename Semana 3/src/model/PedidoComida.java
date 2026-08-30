@@ -2,11 +2,13 @@ package model;
 
 
 import interfaces.Cancelable;
+import interfaces.Despachable;
 
-public class PedidoComida extends Pedido implements Cancelable {
+public class PedidoComida extends Pedido implements Despachable, Cancelable {
     private Repartidor repartidor;
 
-    public PedidoComida(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros, Repartidor repartidor) {
+    public PedidoComida(String idPedido, String direccionEntrega, String tipoPedido, int distanciaKilometros,
+                        Repartidor repartidor) {
         super(idPedido, direccionEntrega, tipoPedido, distanciaKilometros);
         setRepartidor(repartidor);
     }
@@ -58,14 +60,40 @@ public class PedidoComida extends Pedido implements Cancelable {
                 "\nEstado de la mochila térmica: " + estadoMochila;
     }
 
+    @Override
+    public boolean cumpleRequisitos() {
+        return repartidor.isTieneMochilaTermica() && repartidor.isDisponible();
+    }
+
+    @Override
+    public boolean reservar() {
+        if (!cumpleRequisitos()) {
+            return false;
+        }
+        if (isReservado() || isDespachado() || isCancelado()) {
+            return false;
+        }
+        setReservado();
+        return true;
+    }
+
+    @Override
+    public boolean despachar() {
+        if (!isReservado() || isDespachado() || isCancelado()) {
+            return false;
+        }
+
+        setDespachado();
+        return true;
+    }
 
     @Override
     public boolean cancelar() {
-        boolean cancelado = repartidor.isTieneMochilaTermica();
-        boolean cancelado2 = repartidor.isDisponible();
-        if (!cancelado || !cancelado2) {
+        if (isDespachado() || isCancelado()) {
             return false;
         }
+        setCancelado();
         return true;
     }
+
 }
