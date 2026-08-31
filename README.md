@@ -1,114 +1,244 @@
 # SpeedFast
 
-Proyecto desarrollado en Java para representar parte del funcionamiento de la empresa de reparto a domicilio SpeedFast.
+Proyecto desarrollado en Java para representar el funcionamiento de la empresa de reparto a domicilio SpeedFast.
 
-El sistema trabaja con pedidos de comida, encomiendas y compras express. Cada tipo de pedido presenta reglas particulares para asignar un repartidor y calcular su tiempo estimado de entrega.
+El sistema permite gestionar pedidos de comida, encomiendas y compras express. Cada tipo de pedido posee reglas particulares para asignar un repartidor, calcular el tiempo estimado y determinar si puede reservarse, despacharse o cancelarse.
 
-## Clases implementadas
+## Versión Semana 3
+
+Esta versión incorpora interfaces, control de estados, registro de pedidos y un historial general de operaciones.
+
+El código correspondiente se encuentra en la carpeta `Semana 3`.
+
+## Funcionalidades
+
+- Registro de pedidos con identificadores únicos.
+- Asignación automática y manual de repartidores.
+- Reserva, despacho y cancelación de pedidos.
+- Validación de requisitos particulares según el tipo de pedido.
+- Cálculo personalizado del tiempo estimado de entrega.
+- Historial general de operaciones.
+- Clasificación de pedidos reservados, despachados y cancelados.
+
+## Clases principales
 
 ### Pedido
 
-Clase abstracta que contiene los atributos comunes de todos los pedidos:
+Clase abstracta que contiene los atributos y comportamientos comunes de todos los pedidos.
 
-- Identificador del pedido.
-- Dirección de entrega.
-- Tipo de pedido.
-- Distancia en kilómetros.
+Incluye el método implementado `mostrarResumen()` y los métodos abstractos `calcularTiempoEntrega()`, `asignarRepartidor(String nombre)` y `reservar()`.
 
-También contiene:
-
-- `mostrarResumen()`: presenta la información general del pedido.
-- `asignarRepartidor()`: entrega un mensaje general de asignación.
-- `asignarRepartidor(String nombreRepartidor)`: versión sobrecargada que permite indicar el nombre del repartidor.
-- `calcularTiempoEntrega()`: método abstracto implementado de manera diferente en cada clase hija.
+También conserva los estados `reservado`, `despachado` y `cancelado`.
 
 ### PedidoComida
 
-Representa los pedidos provenientes de restaurantes.
+Representa pedidos provenientes de restaurantes.
 
-- Comprueba que el repartidor tenga mochila térmica.
-- Calcula el tiempo de entrega utilizando 15 minutos base más 2 minutos por cada kilómetro.
+Comprueba que el repartidor tenga mochila térmica y se encuentre disponible.
 
 ### PedidoEncomienda
 
 Representa el envío de documentos o paquetes.
 
-- Valida el peso y el estado del embalaje.
-- Calcula el tiempo utilizando 20 minutos base más 1,5 minutos por cada kilómetro.
-- El resultado del cálculo se ajusta a un número entero.
+Valida el peso, el estado del embalaje y la disponibilidad del repartidor.
 
 ### PedidoExpress
 
 Representa pedidos de supermercado o farmacia.
 
-- Comprueba la disponibilidad inmediata del repartidor.
-- Considera un tiempo base de 10 minutos.
-- Si la distancia supera los 5 kilómetros, agrega 5 minutos adicionales.
+Comprueba la disponibilidad inmediata del repartidor y permite mantener el pedido reservado a la espera de despacho.
 
 ### Repartidor
 
-Representa a los repartidores disponibles para los pedidos.
+Representa al trabajador asociado al pedido.
 
-Contiene información sobre:
+Almacena su nombre, disponibilidad y posesión de mochila térmica.
 
-- Nombre del repartidor.
-- Disponibilidad.
-- Posesión de mochila térmica.
+### ControladorDeEnvios
 
-### Main
+Registra y administra los pedidos del sistema.
 
-Crea objetos de cada tipo de pedido y muestra en consola:
+Se encarga de solicitar las operaciones de reserva, despacho y cancelación, además de conservar el historial y clasificar los pedidos según su estado.
 
-- La asignación del repartidor.
-- El resumen del pedido.
-- La distancia de entrega.
-- El tiempo estimado según el tipo de pedido.
+## Interfaces
 
-## Conceptos de programación aplicados
+- `Despachable`: define la operación `despachar()`.
+- `Cancelable`: define la operación `cancelar()`.
+- `Rastreable`: define la consulta `verHistorial()`.
+
+## Conceptos de POO aplicados
 
 - Encapsulamiento mediante atributos privados, getters y setters.
-- Validación de datos con `IllegalArgumentException`.
-- Herencia entre la clase `Pedido` y sus clases derivadas.
-- Clase y método abstractos.
+- Herencia entre `Pedido` y sus clases derivadas.
+- Abstracción mediante una clase y métodos abstractos.
 - Sobrescritura de métodos con `@Override`.
 - Sobrecarga del método `asignarRepartidor()`.
 - Polimorfismo mediante referencias de tipo `Pedido`.
-- Composición entre los pedidos y la clase `Repartidor`.
-- Reutilización del método `mostrarResumen()` mediante `super`.
+- Interfaces para separar responsabilidades.
+- Asociación entre los pedidos y la clase Repartidor.
+- Colecciones mediante `List` y `ArrayList`.
+- Validaciones mediante `IllegalArgumentException`.
+
+## Diagrama de clases
+
+El siguiente diagrama representa las clases, interfaces y relaciones principales del sistema SpeedFast.
+
+```mermaid
+classDiagram
+direction TB
+
+class Pedido {
+    <<abstract>>
+    -String idPedido
+    -String direccionEntrega
+    -String tipoPedido
+    -int distanciaKilometros
+    -boolean reservado
+    -boolean despachado
+    -boolean cancelado
+    +asignarRepartidor() String
+    +asignarRepartidor(String nombre) String
+    +calcularTiempoEntrega() int
+    +mostrarResumen() String
+    +reservar() boolean
+}
+
+class PedidoComida {
+    -Repartidor repartidor
+    +cumpleRequisitos() boolean
+}
+
+class PedidoEncomienda {
+    -String estadoEmbalaje
+    -double peso
+    -Repartidor repartidor
+    +cumpleRequisitos() boolean
+}
+
+class PedidoExpress {
+    -Repartidor repartidor
+    +cumpleRequisitos() boolean
+}
+
+class Repartidor {
+    -String nombreRepartidor
+    -boolean tieneMochilaTermica
+    -boolean disponible
+}
+
+class Cancelable {
+    <<interface>>
+    +cancelar() boolean
+}
+
+class Despachable {
+    <<interface>>
+    +despachar() boolean
+}
+
+class Rastreable {
+    <<interface>>
+    +verHistorial() List~String~
+}
+
+class ControladorDeEnvios {
+    -List~Pedido~ pedidos
+    -List~String~ historial
+    +registrarPedido(Pedido pedido) boolean
+    +reservarPedido(Pedido pedido) boolean
+    +despacharPedido(Pedido pedido) boolean
+    +cancelarPedido(Pedido pedido) boolean
+    +verHistorial() List~String~
+}
+
+class Main {
+    +main(String[] args) void
+}
+
+Pedido <|-- PedidoComida
+Pedido <|-- PedidoEncomienda
+Pedido <|-- PedidoExpress
+
+Cancelable <|.. PedidoComida
+Cancelable <|.. PedidoEncomienda
+Cancelable <|.. PedidoExpress
+
+Despachable <|.. PedidoComida
+Despachable <|.. PedidoEncomienda
+Despachable <|.. PedidoExpress
+
+Rastreable <|.. ControladorDeEnvios
+
+PedidoComida --> Repartidor
+PedidoEncomienda --> Repartidor
+PedidoExpress --> Repartidor
+
+ControladorDeEnvios "1" o-- "0..*" Pedido : administra
+Main ..> ControladorDeEnvios
+Main ..> Pedido
+```
+
+## Aporte del diseño
+
+La herencia permite reutilizar los atributos y métodos comunes definidos en `Pedido`, mientras que las clases hijas incorporan sus propias reglas de funcionamiento.
+
+Las interfaces desacoplan las operaciones de cancelación, despacho y seguimiento, permitiendo incorporar nuevas clases con esas capacidades.
+
+El controlador centraliza el registro y seguimiento de los pedidos. Esta separación de responsabilidades facilita la escalabilidad, reutilización y mantenibilidad del sistema.
 
 ## Cálculo de tiempos
 
 | Tipo de pedido | Cálculo |
 |---|---|
-| Comida | 15 minutos + 2 minutos por kilómetro |
-| Encomienda | 20 minutos + 1,5 minutos por kilómetro |
-| Express | 10 minutos y 5 adicionales si supera 5 kilómetros |
+| Comida | 15 minutos base más 2 minutos por kilómetro |
+| Encomienda | 20 minutos base más 1,5 minutos por kilómetro |
+| Express | 10 minutos base y 5 adicionales si supera 5 kilómetros |
 
-## Validaciones
+## Casos simulados
 
-El proyecto incluye validaciones para evitar:
+La clase `Main` presenta tres recorridos:
 
-- Distancias iguales o inferiores a cero.
-- Repartidores nulos.
-- Nombres nulos o en blanco.
-- Encomiendas con peso inválido.
-- Estados de embalaje no aceptados.
-- Asignación de pedidos de comida sin mochila térmica.
-- Asignación express a repartidores ocupados.
+- Un pedido de comida reservado y despachado.
+- Una encomienda cancelada por no cumplir los requisitos.
+- Un pedido express reservado y a la espera de despacho.
+
+Finalmente, se muestra el historial general y el desglose de pedidos según su estado.
+
+## Estructura de Semana 3
+
+```text
+Semana 3
+`-- src
+    |-- app
+    |   `-- Main.java
+    |-- gestor
+    |   `-- ControladorDeEnvios.java
+    |-- interfaces
+    |   |-- Cancelable.java
+    |   |-- Despachable.java
+    |   `-- Rastreable.java
+    `-- model
+        |-- Pedido.java
+        |-- PedidoComida.java
+        |-- PedidoEncomienda.java
+        |-- PedidoExpress.java
+        `-- Repartidor.java
+```
 
 ## Instrucciones de ejecución
 
-1. Abrir el proyecto en IntelliJ IDEA.
-2. Abrir la clase `Main`, ubicada en el paquete `app`.
-3. Ejecutar el método `main()`.
-4. Revisar los resultados generados en consola.
+1. Abrir la carpeta `Semana 3` en IntelliJ IDEA.
+2. Verificar que el proyecto tenga configurado un JDK compatible.
+3. Abrir la clase `Main`, ubicada en el paquete `app`.
+4. Ejecutar el método `main()`.
+5. Revisar los resultados y el historial en consola.
 
 ## Tecnologías utilizadas
 
-- Java
-- IntelliJ IDEA
-- Git
-- GitHub
+- Java JDK 8 o superior.
+- IntelliJ IDEA.
+- Git.
+- GitHub.
 
 ## Autora
 

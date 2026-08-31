@@ -48,7 +48,7 @@ public class PedidoExpress extends Pedido implements Cancelable, Despachable {
     public int calcularTiempoEntrega() {
         int tiempoBaseDelPedido = 10;
         int tiempoEntrega = tiempoBaseDelPedido;
-        if (getDistanciaKilometros() >5) {
+        if (getDistanciaKilometros() > 5) {
             tiempoEntrega = tiempoBaseDelPedido + 5;
         }
         return tiempoEntrega;

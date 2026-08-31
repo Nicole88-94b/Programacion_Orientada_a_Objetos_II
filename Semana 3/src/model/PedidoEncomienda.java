@@ -58,7 +58,7 @@ public class PedidoEncomienda extends Pedido implements Despachable, Cancelable 
         if (estadoEmbalaje.equals("RECHAZADA")) {
             return "Su encomienda ha sido rechazada.";
         }
-        return "El repartidor tiene la capacidad de transporte. \nPedido asignado a: " + repartidor.getNombreRepartidor();
+        return "El repartidor tiene la capacidad de transporte";
     }
 
     @Override
