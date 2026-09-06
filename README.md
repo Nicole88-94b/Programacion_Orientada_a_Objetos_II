@@ -4,11 +4,11 @@ Proyecto desarrollado en Java para representar el funcionamiento de la empresa d
 
 El sistema permite gestionar pedidos de comida, encomiendas y compras express. Cada tipo de pedido posee reglas particulares para asignar un repartidor, calcular el tiempo estimado y determinar si puede reservarse, despacharse o cancelarse.
 
-## Versión Semana 3
+## Versión Semana 4
 
-Esta versión incorpora interfaces, control de estados, registro de pedidos y un historial general de operaciones.
+Esta versión conserva la estructura orientada a objetos de las semanas anteriores e incorpora programación concurrente para simular el trabajo simultáneo de varios repartidores.
 
-El código correspondiente se encuentra en la carpeta `Semana 3`.
+El código correspondiente se encuentra en la carpeta `Semana 4`.
 
 ## Funcionalidades
 
@@ -19,6 +19,9 @@ El código correspondiente se encuentra en la carpeta `Semana 3`.
 - Cálculo personalizado del tiempo estimado de entrega.
 - Historial general de operaciones.
 - Clasificación de pedidos reservados, despachados y cancelados.
+- Asignación de una lista de pedidos a cada repartidor.
+- Ejecución paralela de los repartidores mediante `ExecutorService`.
+- Simulación de entregas con pausas aleatorias y mensajes de avance.
 
 ## Clases principales
 
@@ -50,9 +53,9 @@ Comprueba la disponibilidad inmediata del repartidor y permite mantener el pedid
 
 ### Repartidor
 
-Representa al trabajador asociado al pedido.
+Representa al trabajador asociado al pedido e implementa la interfaz `Runnable`.
 
-Almacena su nombre, disponibilidad y posesión de mochila térmica.
+Almacena su nombre, disponibilidad, posesión de mochila térmica y una lista de pedidos asignados. Su método `run()` procesa las entregas secuencialmente.
 
 ### ControladorDeEnvios
 
@@ -78,6 +81,8 @@ Se encarga de solicitar las operaciones de reserva, despacho y cancelación, ade
 - Asociación entre los pedidos y la clase Repartidor.
 - Colecciones mediante `List` y `ArrayList`.
 - Validaciones mediante `IllegalArgumentException`.
+- Concurrencia mediante `Runnable` y `ExecutorService`.
+- Pausas aleatorias con `Thread.sleep()` y manejo de `InterruptedException`.
 
 ## Diagrama de clases
 
@@ -124,6 +129,14 @@ class Repartidor {
     -String nombreRepartidor
     -boolean tieneMochilaTermica
     -boolean disponible
+    -List~Pedido~ pedidosAsignados
+    +asignarPedido(Pedido pedido) void
+    +run() void
+}
+
+class Runnable {
+    <<interface>>
+    +run() void
 }
 
 class Cancelable {
@@ -168,6 +181,7 @@ Despachable <|.. PedidoEncomienda
 Despachable <|.. PedidoExpress
 
 Rastreable <|.. ControladorDeEnvios
+Runnable <|.. Repartidor
 
 PedidoComida --> Repartidor
 PedidoEncomienda --> Repartidor
@@ -176,6 +190,7 @@ PedidoExpress --> Repartidor
 ControladorDeEnvios "1" o-- "0..*" Pedido : administra
 Main ..> ControladorDeEnvios
 Main ..> Pedido
+Main ..> Repartidor
 ```
 
 ## Aporte del diseño
@@ -194,20 +209,20 @@ El controlador centraliza el registro y seguimiento de los pedidos. Esta separac
 | Encomienda | 20 minutos base más 1,5 minutos por kilómetro |
 | Express | 10 minutos base y 5 adicionales si supera 5 kilómetros |
 
-## Casos simulados
+## Simulación concurrente
 
-La clase `Main` presenta tres recorridos:
+La clase `Main` crea tres repartidores y asigna dos pedidos a cada uno:
 
-- Un pedido de comida reservado y despachado.
-- Una encomienda cancelada por no cumplir los requisitos.
-- Un pedido express reservado y a la espera de despacho.
+- Valentina entrega un pedido de comida y una encomienda.
+- Camilo entrega un pedido express y un pedido de comida.
+- Tomás entrega una encomienda y un pedido express.
 
-Finalmente, se muestra el historial general y el desglose de pedidos según su estado.
+Los repartidores se ejecutan en paralelo, mientras que cada uno procesa sus propios pedidos de manera secuencial. La aplicación espera que todos finalicen antes de mostrar el mensaje de término.
 
-## Estructura de Semana 3
+## Estructura de Semana 4
 
 ```text
-Semana 3
+Semana 4
 `-- src
     |-- app
     |   `-- Main.java
@@ -227,11 +242,11 @@ Semana 3
 
 ## Instrucciones de ejecución
 
-1. Abrir la carpeta `Semana 3` en IntelliJ IDEA.
+1. Abrir la carpeta `Semana 4` en IntelliJ IDEA.
 2. Verificar que el proyecto tenga configurado un JDK compatible.
 3. Abrir la clase `Main`, ubicada en el paquete `app`.
 4. Ejecutar el método `main()`.
-5. Revisar los resultados y el historial en consola.
+5. Observar en consola el avance simultáneo de los repartidores.
 
 ## Tecnologías utilizadas
 
